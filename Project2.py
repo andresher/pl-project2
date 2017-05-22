@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import font
 from tkinter import filedialog
 from PIL import ImageTk, Image
+import subprocess as sp
 
 
 def raise_frame(frame):
@@ -12,6 +13,7 @@ def upload_image():
     popup = Tk()
     popup.withdraw()
     options = {'filetypes': [('JPEG Files', '.jpg'), ('GIF Files', '.gif')]}
+    global file_path
     file_path = filedialog.askopenfilename(**options)
 
     image = Image.open(file_path)
@@ -27,8 +29,12 @@ def upload_image():
 
 
 def alg1():
-    print("Wiener Filter")
-    raise_frame(results_page)
+    if sp.call(["./WienerFilter/WienerFilter", file_path]) == 0:
+        print("Wiener Filter")
+        raise_frame(results_page)
+    else:
+        print("Error")
+        raise_frame(results_page)
 
 
 def alg2():
