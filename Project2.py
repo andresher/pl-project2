@@ -60,6 +60,11 @@ upload_button.pack()
 # RESULTS PAGE
 
 # TODO Show Processed Image
+image = Image.open("WienerFiltered.png")
+photo = ImageTk.PhotoImage(image)
+label = Label(options_page, image=photo)
+label.image = photo
+label.pack()
 Button(results_page, text='Process a new image', command=lambda:raise_frame(upload_page)).pack(side='left')
 Button(results_page, text='Exit Program', command=results_page.quit).pack(side='left')
 
