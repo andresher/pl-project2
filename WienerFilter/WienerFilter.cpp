@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <assert.h>
+#include <time.h>
 
 using namespace cv;
 using namespace std;
@@ -65,10 +66,20 @@ int main(int argc, char** argv)
 		cout << "The specified image '" << testImage << "' does not exists" << endl;
 		exit(-1);
 	}
+	
+	struct timespec start, finish;
+        double elapsed;
+        clock_gettime(CLOCK_MONOTONIC, &start);
 
-	WienerFilter(src, dst5x5, Size(5,5));
+        WienerFilter(src, dst5x5, Size(5,5));
 
-	imwrite("WienerFiltered.png", dst5x5);
+        clock_gettime(CLOCK_MONOTONIC, &finish);
+        elapsed = (finish.tv_sec - start.tv_sec);
+        elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+        imwrite("WienerFiltered.png", dst5x5);
+
+        cout << "Finished in " << elapsed << " seconds" << endl;
 
 	return 0;
 }
