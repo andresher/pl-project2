@@ -1,7 +1,6 @@
-#include <opencv2/core/core.hpp> 
+#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-
 #include <iostream>
 #include <assert.h>
 #include <time.h>
@@ -12,7 +11,7 @@ using namespace std;
 double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 
 	assert(("src and dst must be one channel grayscale images", src.channels() == 1, dst.channels() == 1));
-	
+
 	int h = src.rows;
 	int w = src.cols;
 	double noiseVariance;
@@ -20,7 +19,7 @@ double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 	dst = Mat1b(h, w);
 
 	Mat1d means, sqrMeans, variances;
-	Mat1d avgVarianceMat; 
+	Mat1d avgVarianceMat;
 
 	boxFilter(src, means, CV_64F, block, Point(-1, -1), true, BORDER_REPLICATE);
 	sqrBoxFilter(src, sqrMeans, CV_64F, block, Point(-1, -1), true, BORDER_REPLICATE);
@@ -51,13 +50,13 @@ double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 
 int main(int argc, char** argv)
 {
-	
+
 	if(argc != 2)
 	{
 		cout << "Usage: WienerFilter <Image_Path>" << endl;
 		return -1;
 	}
-	
+
 	string testImage = argv[1];
 	Mat1b src = imread(testImage, CV_LOAD_IMAGE_GRAYSCALE);
 	Mat1b dst5x5;
@@ -66,20 +65,20 @@ int main(int argc, char** argv)
 		cout << "The specified image '" << testImage << "' does not exists" << endl;
 		exit(-1);
 	}
-	
+
 	struct timespec start, finish;
-        double elapsed;
-        clock_gettime(CLOCK_MONOTONIC, &start);
+  double elapsed;
+  clock_gettime(CLOCK_MONOTONIC, &start);
 
-        WienerFilter(src, dst5x5, Size(5,5));
+  WienerFilter(src, dst5x5, Size(5,5));
 
-        clock_gettime(CLOCK_MONOTONIC, &finish);
-        elapsed = (finish.tv_sec - start.tv_sec);
-        elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+  clock_gettime(CLOCK_MONOTONIC, &finish);
+  elapsed = (finish.tv_sec - start.tv_sec);
+  elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-        imwrite("WienerFiltered.png", dst5x5);
+  imwrite("WienerFiltered.png", dst5x5);
 
-        cout << "Finished in " << elapsed << " seconds" << endl;
+  cout << "Finished in " << elapsed << " seconds" << endl;
 
 	return 0;
 }
