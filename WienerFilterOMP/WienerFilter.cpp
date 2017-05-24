@@ -1,4 +1,4 @@
-#include <opencv2/core/core.hpp> 
+#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
@@ -15,7 +15,7 @@ using namespace std;
 double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 
 	assert(("src and dst must be one channel grayscale images", src.channels() == 1, dst.channels() == 1));
-	
+
 	int h = src.rows;
 	int w = src.cols;
 	double noiseVariance;
@@ -23,7 +23,7 @@ double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 	dst = Mat1b(h, w);
 
 	Mat1d means, sqrMeans, variances;
-	Mat1d avgVarianceMat; 
+	Mat1d avgVarianceMat;
 
 	boxFilter(src, means, CV_64F, block, Point(-1, -1), true, BORDER_REPLICATE);
 	sqrBoxFilter(src, sqrMeans, CV_64F, block, Point(-1, -1), true, BORDER_REPLICATE);
@@ -34,7 +34,7 @@ double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 	reduce(variances, avgVarianceMat, 1, CV_REDUCE_SUM, -1);
 	reduce(avgVarianceMat, avgVarianceMat, 0, CV_REDUCE_SUM, -1);
 	noiseVariance = avgVarianceMat(0, 0) / (h*w);
-        #pragma omp parallel for schedule(guided)
+  #pragma omp parallel for schedule(guided)
 	for (int r = 0; r < h; ++r){
 		// get row pointers
 		uchar const * const srcRow = src.ptr<uchar>(r);
@@ -54,13 +54,13 @@ double WienerFilter(const Mat& src, Mat& dst, const Size& block){
 
 int main(int argc, char** argv)
 {
-	
+
 	if(argc != 2)
 	{
 		cout << "Usage: WienerFilter <Image_Path>" << endl;
 		return -1;
 	}
-	
+
 	string testImage = argv[1];
 	Mat1b src = imread(testImage, CV_LOAD_IMAGE_GRAYSCALE);
 	Mat1b dst5x5;
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 	elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
 	imwrite("WienerFiltered.png", dst5x5);
-	
+
 	cout << "Finished in " << elapsed << " seconds" << endl;
 
 	return 0;
