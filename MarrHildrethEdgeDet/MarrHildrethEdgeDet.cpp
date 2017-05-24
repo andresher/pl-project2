@@ -12,7 +12,7 @@ void marrEdge(const Mat src, Mat& result, int besarKernel, double delta);
 void LoGKernelGenerator(Mat &result, int besarKernel, double delta);
 void rgb2gray(const Mat src, Mat &result);
 
-int main(int argc, char *argv)
+int main(int argc, char** argv)
 {
     if(argc != 2)
     {
