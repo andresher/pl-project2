@@ -29,7 +29,7 @@ def upload_image():
 
 
 def alg1():
-    if sp.call(["./WienerFilter/WienerFilter", file_path]) == 0:
+    if sp.call(["./WienerFilterOMP/build/WienerFilter", file_path]) == 0:
         print("Wiener Filter")
         image = Image.open("WienerFiltered.png")
         photo = ImageTk.PhotoImage(image)
@@ -44,9 +44,18 @@ def alg1():
 
 
 def alg2():
-    print("Marr-Hildreth Edge Detector")
-    raise_frame(results_page)
-
+    if sp.call(["./MarrHildrethEdgeDetOMP/build/MarrHildreth", file_path]) == 0:
+        print("Marr Hildreth Edge Detector")
+        image = Image.open("MarrHildreth.png")
+        photo = ImageTk.PhotoImage(image)
+        label = Label(results_page, image=photo)
+        label.image = photo
+        label.pack()
+        Button(results_page, text='Exit Program', command=results_page.quit).pack(side='left')
+        raise_frame(results_page)
+    else:
+        print("Error")
+        raise_frame(upload_page)
 
 root = Tk()
 upload_page = Frame(root)
